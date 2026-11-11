@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>audite-seu-claude — audite seu Claude Code para o Fable 5.2</title>
+<meta name="description" content="Kit livre que lê o seu Claude Code e acha as instruções escritas para modelos anteriores que atrapalham o Fable 5.2. Relatório com gráficos e correções aprovadas.">
+<link rel="alternate" hreflang="pt-BR" href="https://inematds.github.io/audite-seu-claude/guia/">
+<link rel="alternate" hreflang="en" href="https://inematds.github.io/audite-seu-claude/guia/en/">
+<link rel="alternate" hreflang="es" href="https://inematds.github.io/audite-seu-claude/guia/es/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#FACC15; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#a16207; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .lang{display:inline-flex;gap:2px;font-family:Sora;font-size:.78rem}
+  .lang a{color:var(--mut);padding:.2em .45em;border-radius:6px} .lang a.on{color:var(--amb);background:rgba(250,204,21,.12)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:760px){nav .links a.sec{display:none}}
+  @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(250,204,21,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;height:auto;display:block}
+  .resumo{padding:38px 0 34px;border-bottom:1px solid var(--line)}
+  .resumo p{font-size:1.12rem;line-height:1.7;max-width:74ch;margin:.55em 0 0}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(250,204,21,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px minmax(0,1fr);gap:16px;margin-bottom:26px}
+  .step>div,.card{min-width:0}
+  p code,li code,td code{overflow-wrap:anywhere}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;height:auto;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+</head>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">🔍</span> audite-seu-claude</a>
+  <span class="sep">|</span>
+  <span class="clubpro">
+    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+    <span class="sep">-</span>
+    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
+  </span>
+  <div class="links">
+    <a class="sec" href="#oque">O que é</a>
+    <a class="sec" href="#pontos">Os 10 pontos</a>
+    <a class="sec" href="#guia">Guia de uso</a>
+    <a class="sec" href="#exemplos">Exemplos</a>
+    <span class="lang"><a class="on" href="./">PT</a><a href="en/">EN</a><a href="es/">ES</a></span>
+    <button class="tgl" id="themeToggle" aria-label="Alternar tema" title="Alternar tema">🌙</button>
+    <a class="btn" href="https://github.com/inematds/audite-seu-claude" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">Claude Code · Fable 5.2 · só leitura</span>
+      <h1>Audite seu <span class="amb">Claude</span> para o Fable 5.2</h1>
+      <p class="lead">O prompt que funcionava no modelo anterior pode atrapalhar agora. Ache as linhas antigas em 5 segundos, com relatório e gráficos.</p>
+      <div class="cta">
+        <a class="btn" href="#guia">Começar o guia</a>
+        <a class="btn ghost" href="https://github.com/inematds/audite-seu-claude" target="_blank" rel="noopener">Ver no GitHub</a>
+      </div>
+    </div>
+    <figure><img src="assets/banner.jpg" alt="Banner: Audite seu Claude, pronto para o Fable 5.2"></figure>
+  </div>
+</header>
+
+<section id="resumo" class="resumo"><div class="wrap">
+  <span class="chip">Em resumo</span>
+  <p>O audite-seu-claude é um programa pequeno em Python que lê a configuração do seu Claude Code (o arquivo CLAUDE.md, as skills, as memórias, os plugins e os scripts) e aponta as instruções escritas para modelos anteriores que agora atrapalham o Claude Fable 5.2. Serve para quem usa o Claude Code no dia a dia e vai trocar de modelo. Ele entrega um relatório com gráficos e uma lista de sugestões; você marca o que aprova e o seu próprio Claude faz só essas correções. Precisa apenas de Python 3: não usa internet e não altera a sua configuração (só grava o relatório onde você mandar).</p>
+</div></section>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">O que é</span>
+  <h2>A herança invisível, achada linha por linha</h2>
+  <p class="sub">A Anthropic publicou 10 pontos de atenção para o Fable 5.2. Ele segue instruções ao pé da letra, então regras antigas mudam de efeito. O kit transforma esses 10 pontos em verificações automáticas.</p>
+  <figure style="margin:0 0 26px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000"><img src="assets/banner-grade.jpg" alt="Os pontos auditados: recusas, esforço, subagentes, cautela acumulada, relatório com gráficos, correções aprovadas" loading="lazy" style="width:100%;display:block"></figure>
+  <div class="grid g3">
+    <div class="card"><h3>🔍 Acha o que trava</h3><p>Pedido de raciocínio no texto (pode dar recusa), "pense menos", orçamento de tokens, ordem de sempre delegar, "nunca" sem motivo, estilo rígido, esforço antigo.</p></div>
+    <div class="card"><h3>📊 Mostra o peso</h3><p>Gráficos por ponto, por arquivo e o peso do texto que entra em toda sessão: CLAUDE.md, índice de memória e descrições de skills. Também aponta skills repetidas e memórias velhas.</p></div>
+    <div class="card"><h3>✅ Você aprova, o Claude corrige</h3><p>Marque as sugestões e gere o <code>correcoes.md</code>. Ele vira o pedido de correção: um item por vez, com cópia do original. Regra de segurança nunca é apagada.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">Como funciona</span>
+  <h2>Três passos, você no meio</h2>
+  <p class="sub">O programa só lê. Quem decide o que muda é você; quem edita é o seu Claude, e só o que você aprovou.</p>
+  <div class="flow">
+    <span>varrer.py lê tudo</span><span class="arr">→</span>
+    <span>relatorio.html com gráficos</span><span class="arr">→</span>
+    <span>você marca o que aprova</span><span class="arr">→</span>
+    <span>correcoes.md</span><span class="arr">→</span>
+    <span>"aplique o correcoes.md"</span><span class="arr">→</span>
+    <span>roda de novo e compara</span>
+  </div>
+</div></section>
+
+<section id="pontos"><div class="wrap">
+  <span class="chip">Os 10 pontos da Anthropic</span>
+  <h2>O que a página oficial diz, e o que o kit confere</h2>
+  <p class="sub">Fonte: <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2" target="_blank" rel="noopener">Prompting Claude Fable 5.2</a> (lida em 11/11/2026). Os números são dos testes da própria Anthropic.</p>
+  <div class="grid g2">
+    <div class="card"><h3><span class="num">1</span> Esforço</h3><p>O padrão da API é <code>high</code>. Medium para o dia a dia; xhigh e max só onde você mediu ganho. "Responda sem pensar" não reduz o pensamento: baixe o esforço. <b>Confere:</b> max fixo, xhigh padrão, ajuste copiado de modelo antigo, Fable 5.2 em low/medium.</p></div>
+    <div class="card"><h3><span class="num">2</span> Parada antecipada</h3><p>Em tarefa longa ele às vezes para antes do fim, mais em low e medium. O texto oficial cortou pela metade as sessões largadas no meio, com +~30% de tokens. <b>Confere:</b> se o seu CLAUDE.md tem esse texto (está em <code>blocos/terminar-tarefa.md</code>).</p></div>
+    <div class="card"><h3><span class="num">3</span> Aprovações</h3><p>Diga a ação ("sim, rode a migração no banco de teste") em vez de "continue". Regra de aprovação deve nomear as ações. <b>Confere:</b> aprovação para "qualquer ação" e <code>claude -p "continue"</code> em script.</p></div>
+    <div class="card"><h3><span class="num">4</span> Dono do código</h3><p>"Este código é seu" faz ele reorganizar o código: ~1,5x mais tokens e mudanças que ninguém pediu. Use só quando quer isso, e revise o diff. <b>Confere:</b> a frase, como aviso.</p></div>
+    <div class="card"><h3><span class="num">5</span> Silêncio</h3><p>Ele trabalha calado em sequências longas. O texto oficial faz falar antes da primeira ferramenta, com +~20% de tokens. <b>Confere:</b> se você tem esse texto (<code>blocos/avisar-progresso.md</code>).</p></div>
+    <div class="card"><h3><span class="num">6</span> Subagentes</h3><p>Se o prompt manda delegar, ele delega muito. Revise essas linhas primeiro. <b>Confere:</b> "sempre use subagentes", "agent army", "delegue tudo".</p></div>
+    <div class="card"><h3><span class="num">7</span> Cautela acumulada</h3><p>Notas e memórias juntam "nunca" e ele obedece tudo. Apague as que perderam o motivo; dê alcance e motivo às outras; liste o que NÃO precisa de aprovação. <b>Confere:</b> "nunca" sem motivo, "nunca tente de novo", ordem absoluta em caixa alta, memórias velhas.</p></div>
+    <div class="card"><h3><span class="num">8</span> Instruções antigas</h3><p>Tirar: orçamento de tokens no prompt, "pense menos", "trate a resposta anterior como encerrada" (ele para de apontar os próprios erros) e regra rígida de estilo. <b>Confere:</b> os quatro.</p></div>
+    <div class="card"><h3><span class="num">9</span> Relatório final</h3><p>Peça que escreva para quem não viu o trabalho: o principal primeiro, sem termo inventado. <b>Confere:</b> se você tem esse texto (<code>blocos/relatorio-claro.md</code>).</p></div>
+    <div class="card"><h3><span class="num">10</span> Recusas</h3><p>Pedir o raciocínio escrito na resposta pode cair no filtro <code>reasoning_extraction</code> e a skill para. <b>Confere:</b> "mostre seu raciocínio passo a passo", "chain of thought" — severidade alta.</p></div>
+  </div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">Pré-requisitos</span>
+  <h2>Só Python 3 e git</h2>
+  <p class="sub">Sem instalar pacote, sem internet, sem chave de API. Funciona em Linux, macOS e WSL.</p>
+  <div class="grid g2">
+    <div class="card"><h3>Python 3.8 ou mais novo</h3><p>Só a biblioteca padrão.</p><pre><span class="k">python3</span> --version</pre></div>
+    <div class="card"><h3>Claude Code (para aplicar)</h3><p>O auditor roda sem ele; para aplicar as correções você usa o seu Claude.</p><pre><span class="k">claude</span> --version</pre></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">Guia de uso · passo a passo</span>
+  <h2>Do clone ao Claude corrigido</h2>
+  <p class="sub">É a ordem que a Anthropic recomenda: esforço primeiro, depois limpar as instruções, depois medir.</p>
+
+  <div class="step"><div class="b">1</div><div>
+    <h3>Baixe o kit</h3>
+    <p>Uma pasta, um arquivo principal.</p>
+<pre><span class="k">git clone</span> <span class="s">https://github.com/inematds/audite-seu-claude.git</span> ~/audite-seu-claude</pre>
+  </div></div>
+
+  <div class="step"><div class="b">2</div><div>
+    <h3>Ponha o Fable 5.2 em high nas tarefas longas</h3>
+    <p>O comando <code>/effort</code> do Claude Code muda o nível de esforço (quanto o modelo pensa); sem argumento, mostra o nível atual. Use antes de uma tarefa grande. Nos robôs com <code>claude -p</code>, passe <code>--effort high</code>.</p>
+<pre><span class="k">/effort high</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">3</div><div>
+    <h3>Rode a auditoria</h3>
+    <p>Dentro da pasta do projeto. <code>--home</code> também lê o seu <code>~/.claude</code> (CLAUDE.md global, skills, memórias, plugins).</p>
+<pre><span class="k">cd</span> ~/meu-projeto
+<span class="k">python3</span> ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-json relatorio.json
+<span class="c"># no terminal: total de achados, por ponto e por severidade</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">4</div><div>
+    <h3>Abra o relatório e marque o que aprova</h3>
+    <p>Cada sugestão tem um ID (A001, A002…). Filtre por camada — <b>Fable 5.2</b> (as linhas que mudam o comportamento do modelo) ou <b>volume</b> (peso do contexto, skills repetidas ou sem uso, memórias velhas) — ou por severidade. Clique em <b>gerar correcoes.md</b>: o navegador baixa o arquivo e o texto aparece na tela. <b>Mova o arquivo para a pasta do projeto.</b> Ou gere direto lá pelo terminal, com os IDs:</p>
+<pre><span class="k">python3</span> ~/audite-seu-claude/varrer.py --correcoes A001,A004,A007 --de relatorio.json --saida correcoes.md</pre>
+  </div></div>
+
+  <div class="step"><div class="b">5</div><div>
+    <h3>Peça ao seu Claude para aplicar</h3>
+    <p>Com o <code>correcoes.md</code> na pasta do projeto (o caminho também serve: "aplique o ~/Downloads/correcoes.md"). O cabeçalho do arquivo já diz como: um item por vez, cópia do original em <code>.audite-backup/</code>, regra protegida nunca é apagada, arquivo de plugin não é editado. Vale como aprovação só para essas edições.</p>
+<pre><span class="c"># no Claude Code, na pasta do projeto</span>
+<span class="s">aplique o correcoes.md</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">6</div><div>
+    <h3>Rode de novo e compare</h3>
+    <p>Os achados aplicados somem. Depois rode a sua tarefa mais longa e veja onde ele para, cala ou delega demais. Para cada sintoma, cole o bloco certo de <code>blocos/</code>, um de cada vez.</p>
+<pre><span class="k">python3</span> ~/audite-seu-claude/varrer.py . --home
+<span class="k">cat</span> ~/audite-seu-claude/blocos/terminar-tarefa.md <span class="c"># se ele para no meio</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">7</div><div>
+    <h3>Opcional: a skill e o CI</h3>
+    <p>A skill faz os passos 3 a 6 pelo Claude Code. <code>--uso 30</code> lê os registros das suas sessões (<code>~/.claude/projects/*.jsonl</code>, local) e marca skills que você não usou em 30 dias. <code>--estrito</code> falha o CI se houver achado de severidade alta.</p>
+<pre><span class="k">cp -r</span> ~/audite-seu-claude/skill/audite-seu-claude ~/.claude/skills/
+<span class="k">python3</span> ~/audite-seu-claude/varrer.py . --home --uso 30
+<span class="k">python3</span> ~/audite-seu-claude/varrer.py . --estrito  <span class="c"># sai com 1 se houver "alta"</span></pre>
+  </div></div>
+</div></section>
+
+<section id="exemplos"><div class="wrap">
+  <span class="chip">Exemplos</span>
+  <h2>O relatório de um projeto de teste</h2>
+  <p class="sub">Gerado a partir de <code>tests/fixtures/sujo</code>, um projeto feito de propósito com uma linha de cada tipo (23 achados). <a href="assets/exemplo.html" target="_blank" rel="noopener">Abra o relatório interativo</a> e teste o botão de gerar o correcoes.md.</p>
+  <div class="ex">
+    <figure><img src="assets/ex1.jpg" alt="Topo do relatório: totais, gráfico por ponto da Anthropic, por severidade e por arquivo" loading="lazy"><figcaption>Totais e gráficos: por ponto da Anthropic, por severidade, por arquivo e peso do contexto fixo.</figcaption></figure>
+    <figure><img src="assets/ex2.jpg" alt="Lista de sugestões com caixas para aprovar, trecho, motivo e o que fazer" loading="lazy"><figcaption>Cada sugestão: onde está, o trecho, o motivo (com o número da Anthropic) e o que fazer. Marque e gere o correcoes.md.</figcaption></figure>
+  </div>
+  <p class="mut" style="margin-top:22px">Numa máquina de produção com 148 skills carregadas, a primeira auditoria levou 4 segundos e achou: um hook de plugin que manda escrever "telegráfico, em fragmentos" (ponto 8), uma skill de plugin com "se houver 1% de chance, você é obrigado" (ponto 7), nove ordens de delegar sempre (ponto 6) e o Fable 5.2 configurado em medium (ponto 1).</p>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+  <span class="chip">Cuidados e próximos passos</span>
+  <h2>O auditor sinaliza; quem decide é você</h2>
+  <p class="sub">A própria Anthropic diz que nem toda instrução antiga precisa sair. Teste cada mudança na sua tarefa real.</p>
+  <div class="phase"><div class="tag">Protegida</div><div class="d"><strong>Regra de segurança fica</strong><span>"Nunca" que fala de API, crédito, apagar, publicar ou senha aparece como protegida: a sugestão é dar alcance e motivo, nunca apagar.</span></div></div>
+  <div class="phase"><div class="tag">Plugin</div><div class="d"><strong>Não edite arquivo de plugin</strong><span>A atualização desfaz. Escreva no CLAUDE.md global que aquela regra não vale, ou desligue o plugin.</span></div></div>
+  <div class="phase"><div class="tag">Custo</div><div class="d"><strong>Os blocos custam tokens</strong><span>Terminar a tarefa: +~30% de saída. Avisar progresso: +~20%. Cole só se você vê o sintoma.</span></div></div>
+  <div class="phase"><div class="tag">v1.0</div><div class="d"><strong>Hoje</strong><span>19 regras na camada Fable 5.2, 8 na camada de volume, relatório HTML, correcoes.md, 4 blocos, skill, 18 testes.</span></div></div>
+  <div class="phase"><div class="tag">Depois</div><div class="d"><strong>Medir os sintomas nos logs</strong><span>Contar nas sessões gravadas quantas vezes o modelo parou no meio, ficou calado ou abriu subagentes, antes e depois das correções.</span></div></div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">Python 3 · stdlib</div><div class="pill">Claude Code</div><div class="pill">Fable 5.2</div>
+    <p style="margin-top:18px">audite-seu-claude · kit livre, MIT ·
+      <a href="https://github.com/inematds/audite-seu-claude">inematds/audite-seu-claude</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var KEY='audite-seu-claude-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; }
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      localStorage.setItem(KEY, light?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

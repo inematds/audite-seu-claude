@@ -1,5 +1,7 @@
 # audite-seu-claude
 
+[![audite-seu-claude](guia/assets/banner.jpg)](https://inematds.github.io/audite-seu-claude/guia/)
+
 **🇧🇷 Português · 🇺🇸 [English](README.en.md) · 🇪🇸 [Español](README.es.md)**
 
 ## 📖 Guia de uso
@@ -64,7 +66,7 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | 1 | Baixar o kit | `git clone https://github.com/inematds/audite-seu-claude.git ~/audite-seu-claude` | 🧠 você |
 | 2 | Pôr o Fable 5.2 em `high` nas tarefas longas | `/effort high` (ou `--effort high` nos robôs) | 🧠 você |
 | 3 | Auditar | `python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-json relatorio.json` | ⚙️ script |
-| 4 | Ler o relatório e marcar o que aprova | abrir `relatorio.html` → "gerar correcoes.md" | 🧠 você |
+| 4 | Ler o relatório e marcar o que aprova | abrir `relatorio.html` → "gerar correcoes.md" e mover o arquivo baixado para a pasta do projeto (ou `varrer.py --correcoes A001,A004 --de relatorio.json --saida correcoes.md`) | 🧠 você |
 | 5 | Aplicar só o aprovado | no Claude Code: "aplique o correcoes.md" | 🤖 Claude |
 | 6 | Conferir | rodar o passo 3 de novo e comparar | ⚙️ script |
 | 7 | Rodar a tarefa mais longa e anotar onde ele para, cala ou delega demais | — | 🧠 você |
