@@ -30,7 +30,12 @@ import argparse, html, json, os, re, sys, time
 from datetime import date, datetime
 from pathlib import Path
 
-VERSAO = '1.0.1'
+VERSAO = '1.0.2'
+
+DICA_BIBLIOTECA = ('Dica: crie uma biblioteca de skills, uma pasta fora de ~/.claude/skills (ex.: ~/projetos/skills-reserva/.claude/skills) '
+                   'com um INDICE.md (nome + para quê + palavras de busca). Ela não carrega em toda sessão. '
+                   'Uma linha no CLAUDE.md global manda o Claude buscar no índice quando você pedir uma skill que não está carregada. '
+                   'Antes de mover, confira se outra skill, script ou timer chama a skill. Passo a passo: blocos/biblioteca-skills.md.')
 DOC = 'https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2'
 HOME = str(Path.home())
 IGNORAR_DIR = {'.git', 'node_modules', '.venv', 'venv', 'env', '__pycache__', 'dist', 'build', '.next', '.cache',
@@ -419,7 +424,7 @@ class Auditoria:
                 self.add('volume', 'muitas-skills', 0, 'info', Path(HOME) / '.claude' / 'skills', 0,
                          f'{len(self.skills)} skills ({nprop} suas, {len(self.skills)-nprop} de plugins), ~{tot} tokens de descrição',
                          'As descrições de todas as skills entram em toda sessão e competem pelo mesmo gatilho.',
-                         'Rode com --uso 30 para ver as que não usa; arquive as paradas.')
+                         'Rode com --uso 30 para ver as que não usa. ' + DICA_BIBLIOTECA)
         # duplicadas (mesmo nome ou descrição parecida)
         por_nome = {}
         for s in self.skills:
@@ -480,7 +485,7 @@ class Auditoria:
             if usadas.get(s['nome'].split(':')[-1].lower(), 0) == 0:
                 self.add('volume', 'skill-sem-uso', 0, 'baixa', s['arq'], 0, f'"{s["nome"]}": 0 usos em {dias} dias',
                          'Skill parada ainda carrega a descrição em toda sessão.',
-                         'Arquive (mova para fora de ~/.claude/skills) se não for usar.')
+                         'Se não usa todo dia, mova para a biblioteca de skills. ' + DICA_BIBLIOTECA)
 
     def ausencias(self):
         if not self.textos_inst:

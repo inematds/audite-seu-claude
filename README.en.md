@@ -55,7 +55,7 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | File | What it does |
 |---|---|
 | `varrer.py` | The auditor. Options: `--home`, `--html`, `--saida-json`, `--json`, `--uso DIAS`, `--anonimo`, `--fundo N`, `--estrito` (CI), `--correcoes IDs --de relatorio.json`. |
-| `blocos/` | Ready-to-paste text for `CLAUDE.md`: `terminar-tarefa.md`, `avisar-progresso.md`, `relatorio-claro.md` (translations of the official texts, with the cost measured by Anthropic), and `aprovacoes.md` (template with a list of named actions). Originals in `blocos/en/`. |
+| `blocos/` | Ready-to-paste text for `CLAUDE.md`: `terminar-tarefa.md`, `avisar-progresso.md`, `relatorio-claro.md` (translations of the official texts, with the cost measured by Anthropic), and `aprovacoes.md` (template with a list of named actions). Originals in `blocos/en/`. More in `biblioteca-skills.md`: how to keep the skills you don’t use every day. |
 | `skill/audite-seu-claude/` | Skill for Claude Code: audits, waits for your approval, and applies `correcoes.md`. Copy it to `~/.claude/skills/`. |
 | `tests/` | 18 tests with no network access: `python3 -m unittest discover tests`. |
 
@@ -71,6 +71,10 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | 6 | Check | run step 3 again and compare | ⚙️ script |
 | 7 | Run the longest task and note where it stops, goes quiet, or delegates too much | — | 🧠 you |
 | 8 | For each symptom, paste the right block and measure (one at a time) | `blocos/*.md` | 🧠 + 🤖 |
+
+## Tip: skills library
+
+Every skill in `~/.claude/skills` loads its description in every session. Instead of deleting the ones you rarely use, keep them in a **library**: a folder outside the loading path (e.g., `~/projetos/skills-reserva/.claude/skills`) with an `INDICE.md` (name, purpose, search terms). A line in the global `CLAUDE.md` tells Claude to look in the index when you ask for a skill that isn’t loaded. Before moving one, check whether another skill, script, or timer calls it. On the author’s machine: 148 → 107 loaded skills, 13.7k → 9.6k description tokens per session. Step-by-step instructions and the ready-to-use line: [`blocos/biblioteca-skills.md`](blocos/biblioteca-skills.md).
 
 ## Cautions
 

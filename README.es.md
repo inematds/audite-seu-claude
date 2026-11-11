@@ -55,7 +55,7 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | Archivo | Qué hace |
 |---|---|
 | `varrer.py` | El auditor. Opciones: `--home`, `--html`, `--saida-json`, `--json`, `--uso DIAS`, `--anonimo`, `--fundo N`, `--estrito` (CI), `--correcoes IDs --de relatorio.json`. |
-| `blocos/` | Textos listos para pegar en `CLAUDE.md`: `terminar-tarefa.md`, `avisar-progresso.md`, `relatorio-claro.md` (traducciones de los textos oficiales, con el costo medido por Anthropic) y `aprovacoes.md` (modelo con la lista de acciones nombradas). Originales en `blocos/en/`. |
+| `blocos/` | Textos listos para pegar en `CLAUDE.md`: `terminar-tarefa.md`, `avisar-progresso.md`, `relatorio-claro.md` (traducciones de los textos oficiales, con el costo medido por Anthropic) y `aprovacoes.md` (modelo con la lista de acciones nombradas). Originales en `blocos/en/`. Más información en `biblioteca-skills.md`: cómo guardar las skills que no usas todos los días. |
 | `skill/audite-seu-claude/` | Skill para Claude Code: audita, espera tu aprobación y aplica el `correcoes.md`. Copia a `~/.claude/skills/`. |
 | `tests/` | 18 pruebas sin red: `python3 -m unittest discover tests`. |
 
@@ -71,6 +71,10 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | 6 | Revisar | ejecutar de nuevo el paso 3 y comparar | ⚙️ script |
 | 7 | Ejecutar la tarea más larga y anotar dónde se detiene, se queda callado o delega demasiado | — | 🧠 tú |
 | 8 | Para cada síntoma, pegar el bloque adecuado y medir (uno a la vez) | `blocos/*.md` | 🧠 + 🤖 |
+
+## Consejo: biblioteca de skills
+
+Cada skill en `~/.claude/skills` carga su descripción en cada sesión. En vez de borrar las que usas poco, guárdalas en una **biblioteca**: una carpeta fuera de la carga (p. ej., `~/projetos/skills-reserva/.claude/skills`) con un `INDICE.md` (nombre, para qué sirve, palabras de búsqueda). Una línea en el `CLAUDE.md` global le indica a Claude que busque en el índice cuando pidas una skill que no está cargada. Antes de moverla, comprueba si otra skill, script o timer la invoca. En la máquina del autor: 148 → 107 skills cargadas, de 13,7 mil → 9,6 mil tokens de descripción por sesión. Paso a paso y la línea lista: [`blocos/biblioteca-skills.md`](blocos/biblioteca-skills.md).
 
 ## Precauciones
 

@@ -55,7 +55,7 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | Arquivo | O que faz |
 |---|---|
 | `varrer.py` | O auditor. Opções: `--home`, `--html`, `--saida-json`, `--json`, `--uso DIAS`, `--anonimo`, `--fundo N`, `--estrito` (CI), `--correcoes IDs --de relatorio.json`. |
-| `blocos/` | Textos prontos para colar no `CLAUDE.md`: `terminar-tarefa.md`, `avisar-progresso.md`, `relatorio-claro.md` (traduções dos textos oficiais, com o custo medido pela Anthropic) e `aprovacoes.md` (modelo com a lista de ações nomeadas). Originais em `blocos/en/`. |
+| `blocos/` | Textos prontos para colar no `CLAUDE.md`: `terminar-tarefa.md`, `avisar-progresso.md`, `relatorio-claro.md` (traduções dos textos oficiais, com o custo medido pela Anthropic) e `aprovacoes.md` (modelo com a lista de ações nomeadas). Originais em `blocos/en/`. Mais `biblioteca-skills.md`: como guardar as skills que você não usa todo dia. |
 | `skill/audite-seu-claude/` | Skill para o Claude Code: audita, espera a sua aprovação, aplica o `correcoes.md`. Copie para `~/.claude/skills/`. |
 | `tests/` | 18 testes sem rede: `python3 -m unittest discover tests`. |
 
@@ -71,6 +71,10 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | 6 | Conferir | rodar o passo 3 de novo e comparar | ⚙️ script |
 | 7 | Rodar a tarefa mais longa e anotar onde ele para, cala ou delega demais | — | 🧠 você |
 | 8 | Para cada sintoma, colar o bloco certo e medir (um por vez) | `blocos/*.md` | 🧠 + 🤖 |
+
+## Dica: biblioteca de skills
+
+Toda skill em `~/.claude/skills` carrega a descrição em toda sessão. Em vez de apagar as que você usa pouco, guarde-as numa **biblioteca**: uma pasta fora do carregamento (ex.: `~/projetos/skills-reserva/.claude/skills`) com um `INDICE.md` (nome, para quê, palavras de busca). Uma linha no `CLAUDE.md` global manda o Claude buscar no índice quando você pedir uma skill que não está carregada. Antes de mover, confira se outra skill, script ou timer chama a skill. Na máquina do autor: 148 → 107 skills carregadas, 13,7 mil → 9,6 mil tokens de descrição por sessão. Passo a passo e a linha pronta: [`blocos/biblioteca-skills.md`](blocos/biblioteca-skills.md).
 
 ## Cuidados
 
