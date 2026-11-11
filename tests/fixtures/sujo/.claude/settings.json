@@ -1,0 +1,9 @@
+{
+  "model": "fable",
+  "effortLevel": "max",
+  "modelSettings": {
+    "claude-fable-5-1": {"effortLevel": "xhigh"},
+    "claude-fable-5-2": {"effortLevel": "medium"}
+  },
+  "hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "echo oi"}]}]}
+}
