@@ -306,7 +306,7 @@ class Auditoria:
                 linha_txt = linhas[ln - 1] if ln - 1 < len(linhas) else m.group(0)
                 if tipo == 'script' and re.match(r'\s*(#|//|echo\b|log\b|print)', linha_txt):
                     continue
-                if citado(txt, m.start()):
+                if tipo == 'inst' and citado(txt, m.start()):  # em script o prompt fica entre aspas: conta
                     continue
                 sug = r['sugestao']
                 if terceiro:

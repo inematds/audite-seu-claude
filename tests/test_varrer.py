@@ -26,6 +26,7 @@ class TestSujo(unittest.TestCase):
         self.assertTrue(a)
         self.assertEqual(a[0]['sev'], 'alta')
         self.assertEqual(a[0]['ponto'], 10)
+        self.assertTrue(any(x['arquivo'].endswith('roda.sh') for x in a), 'prompt entre aspas em script tem que contar')
 
     def test_instrucoes_antigas(self):
         for cod in ('pense-menos', 'orcamento-tokens', 'resposta-encerrada', 'estilo-rigido'):
