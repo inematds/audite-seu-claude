@@ -30,7 +30,7 @@ import argparse, html, json, os, re, sys, time
 from datetime import date, datetime
 from pathlib import Path
 
-VERSAO = '1.0.0'
+VERSAO = '1.0.1'
 DOC = 'https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2'
 HOME = str(Path.home())
 IGNORAR_DIR = {'.git', 'node_modules', '.venv', 'venv', 'env', '__pycache__', 'dist', 'build', '.next', '.cache',
