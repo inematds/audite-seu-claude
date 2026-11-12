@@ -1,5 +1,6 @@
 <!-- audite-seu-claude · P2 Parada antecipada · fonte: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2 (lido em 11/11/2026) -->
 <!-- Use se o Claude para no meio de tarefa longa (mais comum em low/medium). Medido pela Anthropic em sessões regravadas no esforço medium: cerca de metade das sessões a menos terminaram com trabalho por fazer; tokens de saída subiram ~30%. Mantenha a sua confirmação para ação arriscada ou irreversível. -->
+<!-- No Claude Code com o Fable 5.2 este texto já vem ligado de fábrica (testes publicados na versão 2.1.322): não cole. Ele serve para quem chama o modelo pela API ou por programa próprio. -->
 
 # Concluir o trabalho
 Evite parar enquanto ainda houver trabalho pendente que o usuário pediu. Persista e só pare quando for necessário.

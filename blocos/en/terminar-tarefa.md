@@ -1,4 +1,5 @@
 <!-- audite-seu-claude · P2 Parada antecipada · source: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2 (read 2026-11-11) -->
+<!-- In Claude Code with Fable 5.2 this text already ships enabled (published tests on v2.1.322): do not paste it. It is for calling the model through the API or your own program. -->
 
 # Finishing work
 Please avoid stopping while you still owe work the user asked for. Be persistent and do not stop unless needed.

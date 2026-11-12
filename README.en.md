@@ -72,6 +72,12 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | 7 | Run the longest task and note where it stops, goes quiet, or delegates too much | — | 🧠 you |
 | 8 | For each symptom, paste the right block and measure (one at a time) | `blocos/*.md` | 🧠 + 🤖 |
 
+## Alongside /doctor prompt-audit
+
+Claude Code 2.1.283 or newer has an official auditor: `/doctor prompt-audit`. It looks for instructions written for older models, referenced files or commands that no longer exist, and rules that contradict each other across files, and suggests edits. This kit covers what it doesn't read: memories, text pasted by plugins, prompts inside scripts and bots, the effort level in `settings.json`, and skill weight, with a chart-based report. Run both.
+
+With Fable 5.2, Claude Code automatically enables the task completion text and the reminder for when it goes silent (tests published in version 2.1.322). The `terminar-tarefa.md` and `avisar-progresso.md` blocks are for those who call the model through the API or their own program.
+
 ## Tip: skills library
 
 Every skill in `~/.claude/skills` loads its description in every session. Instead of deleting the ones you rarely use, keep them in a **library**: a folder outside the loading path (e.g., `~/projetos/skills-reserva/.claude/skills`) with an `INDICE.md` (name, purpose, search terms). A line in the global `CLAUDE.md` tells Claude to look in the index when you ask for a skill that isn’t loaded. Before moving one, check whether another skill, script, or timer calls it. On the author’s machine: 148 → 107 loaded skills, 13.7k → 9.6k description tokens per session. Step-by-step instructions and the ready-to-use line: [`blocos/biblioteca-skills.md`](blocos/biblioteca-skills.md).

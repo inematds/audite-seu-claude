@@ -72,6 +72,12 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | 7 | Ejecutar la tarea más larga y anotar dónde se detiene, se queda callado o delega demasiado | — | 🧠 tú |
 | 8 | Para cada síntoma, pegar el bloque adecuado y medir (uno a la vez) | `blocos/*.md` | 🧠 + 🤖 |
 
+## Junto con el /doctor prompt-audit
+
+Claude Code 2.1.283 o posterior tiene un auditor oficial: `/doctor prompt-audit`. Busca instrucciones escritas para modelos antiguos, archivos o comandos mencionados que ya no existen y reglas que se contradicen entre archivos, y propone las ediciones. Este kit cubre lo que el auditor no lee: memorias, textos pegados por plugins, prompts dentro de scripts y bots, el nivel de esfuerzo en `settings.json` y el peso de las skills, con un informe en gráficos. Ejecuta ambos.
+
+Con Fable 5.2, Claude Code ya activa automáticamente el texto para terminar la tarea y el recordatorio cuando se queda callado (pruebas publicadas en la versión 2.1.322). Los bloques `terminar-tarefa.md` y `avisar-progresso.md` sirven para quienes llaman al modelo mediante la API o con un programa propio.
+
 ## Consejo: biblioteca de skills
 
 Cada skill en `~/.claude/skills` carga su descripción en cada sesión. En vez de borrar las que usas poco, guárdalas en una **biblioteca**: una carpeta fuera de la carga (p. ej., `~/projetos/skills-reserva/.claude/skills`) con un `INDICE.md` (nombre, para qué sirve, palabras de búsqueda). Una línea en el `CLAUDE.md` global le indica a Claude que busque en el índice cuando pidas una skill que no está cargada. Antes de moverla, comprueba si otra skill, script o timer la invoca. En la máquina del autor: 148 → 107 skills cargadas, de 13,7 mil → 9,6 mil tokens de descripción por sesión. Paso a paso y la línea lista: [`blocos/biblioteca-skills.md`](blocos/biblioteca-skills.md).

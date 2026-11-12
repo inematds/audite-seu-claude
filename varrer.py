@@ -30,7 +30,7 @@ import argparse, html, json, os, re, sys, time
 from datetime import date, datetime
 from pathlib import Path
 
-VERSAO = '1.0.3'
+VERSAO = '1.0.4'
 
 DICA_BIBLIOTECA = ('Dica: crie uma biblioteca de skills, uma pasta fora de ~/.claude/skills (ex.: ~/projetos/skills-reserva/.claude/skills) '
                    'com um INDICE.md (nome + para quê + palavras de busca). Ela não carrega em toda sessão. '
@@ -131,11 +131,11 @@ AUSENCIAS = [
     dict(cod='sem-bloco-terminar', ponto=2, bloco='blocos/terminar-tarefa.md',
          re=r'n[ãa]o\s+pare|evite\s+parar|avoid\s+stopping|finishing\s+work|termin(e|ar)\s+a\s+tarefa|at[ée]\s+o\s+fim|carry\s+on',
          motivo='Em tarefas longas o Fable 5.2 às vezes encerra o turno antes do fim (mais em low/medium). A Anthropic dá um texto que separa obstáculo comum de bloqueio de verdade.',
-         sugestao='Se você vê paradas no meio, cole blocos/terminar-tarefa.md no CLAUDE.md global. Custo medido: +~30% de tokens de saída.'),
+         sugestao='No Claude Code com o Fable 5.2 esse texto já vem ligado de fábrica: não cole. Pela API ou por programa próprio, se você vê paradas no meio, cole blocos/terminar-tarefa.md. Custo medido: +~30% de tokens de saída.'),
     dict(cod='sem-aviso-progresso', ponto=5, bloco='blocos/avisar-progresso.md',
          re=r'diga\s+em\s+uma\s+linha|say\s+in\s+a\s+line|antes\s+da\s+primeira\s+ferramenta|before\s+your\s+first\s+tool|atualiza[çc][õo]es\s+breves|brief\s+updates',
          motivo='O Fable 5.2 trabalha calado em sequências longas de ferramentas e às vezes age sem dizer o que vai fazer.',
-         sugestao='Onde uma pessoa acompanha ao vivo, cole blocos/avisar-progresso.md. Custo medido: +~20% de tokens de saída.'),
+         sugestao='No Claude Code com o Fable 5.2 o lembrete de silêncio já vem de fábrica: não cole. Pela API ou por programa próprio, onde uma pessoa acompanha ao vivo, cole blocos/avisar-progresso.md (a última frase sozinha cortou a maior parte dos silêncios longos nos testes da Anthropic). Custo do bloco inteiro: +~20% de tokens de saída.'),
     dict(cod='sem-relatorio-claro', ponto=9, bloco='blocos/relatorio-claro.md',
          re=r'leitor\s+sem\s+contexto|pouco\s+contexto|comunicar\s+com\s+clareza|low-context\s+reader|communicating\s+clearly'
             r'|mais\s+importante\s+primeiro|key\s+points\s+in\s+the\s+first',
@@ -554,6 +554,7 @@ def texto(au):
     out.append('Por severidade: ' + ', '.join(f'{s}={r["por_sev"].get(s, 0)}' for s in SEVS))
     if r['contexto_tokens']:
         out.append('Contexto fixo (tokens estimados): ' + ', '.join(f'{k}≈{v}' for k, v in r['contexto_tokens'].items()))
+    out.append('Complemento oficial: no Claude Code 2.1.283+, rode também /doctor prompt-audit (acha arquivo ou comando citado que não existe e regras que se contradizem).')
     out.append('')
     resto = {}
     for a in au.achados:
@@ -678,6 +679,7 @@ button.pri{{background:var(--amb);color:#1a1206;border:0}}textarea{{width:100%;m
 <section class="card"><h2>Peso do contexto fixo (tokens estimados)</h2>{svg_barras(ctx, cor='var(--warm)', rotulo_larg=200)}</section>
 </div>
 <h2>Sugestões</h2>
+<p class="mut">Complemento oficial: no Claude Code 2.1.283 ou mais novo, rode também <code>/doctor prompt-audit</code>. Ele acha arquivo ou comando citado que não existe mais e regras que se contradizem entre arquivos.</p>
 <p class="mut">Marque o que você aprova e gere o <code>correcoes.md</code>. Depois diga ao seu Claude: <i>"aplique o correcoes.md"</i>. Regras <span class="tag pro">protegida</span> nunca são apagadas, só ganham alcance e motivo.</p>
 <div class="barra"><select id="f"><option value="">todas</option><option value="fable52">só Fable 5.2</option><option value="volume">só volume</option>
 <option value="alta">só alta</option><option value="media">só média</option></select>
