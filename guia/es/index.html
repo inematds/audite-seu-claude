@@ -114,6 +114,7 @@
     <a class="sec" href="#video">Vídeo</a>
     <a class="sec" href="#oque">Qué es</a>
     <a class="sec" href="#pontos">Los 10 puntos</a>
+    <a class="sec" href="#prompts">Prompts</a>
     <a class="sec" href="#guia">Guía de uso</a>
     <a class="sec" href="#exemplos">Ejemplos</a>
     <span class="lang"><a href="../">PT</a><a href="../en/">EN</a><a class="on" href="./">ES</a></span>
@@ -193,6 +194,28 @@
     <div class="card"><h3><span class="num">9</span> Informe final</h3><p>Pídele que escriba para alguien que no haya visto el trabajo: primero lo principal, sin términos inventados. <b>Comprueba:</b> si tienes este texto (<code>blocos/relatorio-claro.md</code>).</p></div>
     <div class="card"><h3><span class="num">10</span> Rechazos</h3><p>Pedir que escriba su razonamiento en la respuesta puede activar el filtro <code>reasoning_extraction</code> y detener la skill. <b>Comprueba:</b> «muestra tu razonamiento paso a paso», «chain of thought» — gravedad alta.</p></div>
   </div>
+</div></section>
+
+<section id="prompts"><div class="wrap">
+  <span class="chip">Qué cambia en los prompts</span>
+  <h2>Hace lo que está escrito, al pie de la letra</h2>
+  <p class="sub">Sin contar las skills y el volumen, estos son los cambios de prompt que más alteran el resultado, de mayor a menor. Un prompt escrito para el modelo que «interpretaba» empieza a dar un resultado diferente.</p>
+  <h3 style="margin:22px 0 12px">Para empresas (sistemas, automatizaciones, API)</h3>
+  <div class="grid g2">
+    <div class="card"><h3><span class="num">1</span> «Muéstrame tu razonamiento» puede convertirse en una negativa</h3><p>Un prompt antiguo con «explica paso a paso cómo pensaste» puede devolver una negativa (<code>refusal</code>) en vez de una respuesta. Es el único punto que puede romper la producción. <b>Cambio:</b> quita la frase; para ver el razonamiento, usa el resumen del pensamiento de la API.</p></div>
+    <div class="card"><h3><span class="num">2</span> El esfuerzo importa más que el prompt</h3><p>El valor predeterminado es <code>high</code>, que cuesta más. «Responde directamente, sin pensar mucho» no reduce el esfuerzo. <b>Cambio:</b> elige el nivel según la tarea (low para lo simple, medium para el día a día, high para una tarea larga) y mide. No copies el ajuste del modelo anterior.</p></div>
+    <div class="card"><h3><span class="num">3</span> Se detiene a mitad de camino</h3><p>Ocurre más con low y medium. En una automatización, deja la tarea a medias sin mostrar ningún error. <b>Cambio:</b> pega el texto de «termina el trabajo»: resolver por su cuenta los obstáculos comunes, detenerse solo ante un bloqueo real y decir qué falta.</p></div>
+    <div class="card"><h3><span class="num">4</span> Las reglas antiguas se convierten en un freno</h3><p>Años de «nunca hagas X» y «pide siempre aprobación»: obedece todo y se vuelve tímido. <b>Cambio:</b> indica el motivo y el alcance de cada regla y escribe qué <b>no</b> necesita aprobación.</p></div>
+    <div class="card"><h3><span class="num">5</span> «Usa siempre subagentes» multiplica el costo</h3><p>Reparte el trabajo entre varios agentes. <b>Cambio:</b> «cuando la tarea sea independiente y pueda ejecutarse en paralelo».</p></div>
+  </div>
+  <h3 style="margin:26px 0 12px">Para quienes conversan con él</h3>
+  <div class="grid g2">
+    <div class="card"><h3><span class="num">1</span> Di la acción, no «continúa»</h3><p>«Sí, ejecuta la migración en la base de prueba» funciona mejor que «puedes seguir».</p></div>
+    <div class="card"><h3><span class="num">2</span> «Ese código es tuyo» tiene un costo</h3><p>Combina código repetido y modifica lo que no pediste, con ~50% más tokens. Úsalo cuando quieras reestructurar y revisa el diff.</p></div>
+    <div class="card"><h3><span class="num">3</span> Trabaja en silencio</h3><p>Para seguir el proceso, pide: «antes de empezar, di en una línea qué vas a hacer».</p></div>
+    <div class="card"><h3><span class="num">4</span> Pide el formato del resumen</h3><p>«Escribe para quien no siguió el proceso; empieza por lo principal».</p></div>
+  </div>
+  <div class="card" style="margin-top:18px"><h3>¿Y Opus 5.5? ¿Cambiar las reglas lo empeora?</h3><p>No. Los cambios anteriores siguen las buenas prácticas de Anthropic para los modelos Claude en general: indicar el motivo de cada regla, expresar claramente la acción y pedir que termine el trabajo también ayudan a Opus. Adivina mejor la intención, así que la mejora es menor. El esfuerzo se ajusta por modelo en <code>settings.json</code> (<code>modelSettings</code>), así que subir el Fable 5.2 no afecta a Opus. El único efecto es que el texto de «termina el trabajo» puede hacer que Opus trabaje y gaste un poco más en una tarea larga. Las reglas de seguridad (API, crédito, borrar, publicar) se mantienen igual en ambos.</p></div>
 </div></section>
 
 <section id="pre"><div class="wrap">
@@ -278,7 +301,7 @@
   <div class="phase"><div class="tag">Plugin</div><div class="d"><strong>No edites archivos de plugins</strong><span>La actualización deshace el cambio. Escribe en el CLAUDE.md global que esa regla no se aplica o desactiva el plugin.</span></div></div>
   <div class="phase"><div class="tag">Consejo</div><div class="d"><strong>Biblioteca de skills: guárdalas, no las borres</strong><span>Las skills que usas poco van a una carpeta fuera de <code>~/.claude/skills</code>, con un <code>INDICE.md</code> (nombre, para qué sirve, palabras de búsqueda). Una línea en el CLAUDE.md global le indica a Claude que busque allí cuando pidas una skill que no está cargada. Antes, comprueba si otra skill, script o timer la invoca. En la máquina del autor: 148 → 107 skills cargadas y de 13,7 mil → 9,6 mil tokens de descripción por sesión. Paso a paso: <a href="https://github.com/inematds/audite-seu-claude/blob/main/blocos/biblioteca-skills.md" target="_blank" rel="noopener">blocos/biblioteca-skills.md</a>.</span></div></div>
   <div class="phase"><div class="tag">Costo</div><div class="d"><strong>Los bloques cuestan tokens</strong><span>Terminar la tarea: +~30% de salida. Avisar del progreso: +~20%. Pégalos solo si observas el síntoma.</span></div></div>
-  <div class="phase"><div class="tag">v1.0</div><div class="d"><strong>Hoy</strong><span>19 reglas en la capa Fable 5.2, 8 en la capa de volumen, informe HTML, correcoes.md, 4 bloques, skill, 18 pruebas.</span></div></div>
+  <div class="phase"><div class="tag">v1.0</div><div class="d"><strong>Hoy</strong><span>19 reglas en la capa Fable 5.2, 8 en la capa de volumen, informe HTML, correcoes.md, 4 bloques, skill, 19 pruebas.</span></div></div>
   <div class="phase"><div class="tag">Después</div><div class="d"><strong>Medir los síntomas en los registros</strong><span>Contar en las sesiones grabadas cuántas veces el modelo se detuvo a mitad, se quedó en silencio o abrió subagentes, antes y después de las correcciones.</span></div></div>
 </div></section>
 

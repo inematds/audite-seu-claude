@@ -114,6 +114,7 @@
     <a class="sec" href="#video">Video</a>
     <a class="sec" href="#oque">What it is</a>
     <a class="sec" href="#pontos">The 10 points</a>
+    <a class="sec" href="#prompts">Prompts</a>
     <a class="sec" href="#guia">User guide</a>
     <a class="sec" href="#exemplos">Examples</a>
     <span class="lang"><a href="../">PT</a><a class="on" href="./">EN</a><a href="../es/">ES</a></span>
@@ -193,6 +194,28 @@
     <div class="card"><h3><span class="num">9</span> Final report</h3><p>Ask it to write for someone who did not see the work: lead with the main point, without invented terms. <b>Checks:</b> whether you have this text (<code>blocos/relatorio-claro.md</code>).</p></div>
     <div class="card"><h3><span class="num">10</span> Refusals</h3><p>Asking it to write out its reasoning in the response can trigger the <code>reasoning_extraction</code> filter and stop the skill. <b>Checks:</b> “show your reasoning step by step,” “chain of thought” — high severity.</p></div>
   </div>
+</div></section>
+
+<section id="prompts"><div class="wrap">
+  <span class="chip">What changes in prompts</span>
+  <h2>It does exactly what is written, to the letter</h2>
+  <p class="sub">Setting skills and context length aside, these are the prompt changes that most affect the result, from greatest to least. A prompt written for the model that "interpreted" instructions now produces a different result.</p>
+  <h3 style="margin:22px 0 12px">For businesses (systems, automations, API)</h3>
+  <div class="grid g2">
+    <div class="card"><h3><span class="num">1</span> "Show your reasoning" can lead to a refusal</h3><p>An old prompt with "explain step by step how you thought" may return a refusal (<code>refusal</code>) instead of an answer. This is the only point that breaks production. <b>Change:</b> remove the phrase; to see the reasoning, use the API's reasoning summary.</p></div>
+    <div class="card"><h3><span class="num">2</span> Effort matters more than the prompt</h3><p>The default is <code>high</code>, which costs more. "Answer directly, without thinking too much" does not reduce the effort. <b>Change:</b> choose the level for each task (low for simple tasks, medium for everyday tasks, high for long tasks) and measure. Don't copy the previous model's setting.</p></div>
+    <div class="card"><h3><span class="num">3</span> It stops halfway through</h3><p>More often with low and medium. In automation, a task is abandoned without any error. <b>Change:</b> paste in the "finish the job" text: solve common obstacles on its own, stop only when genuinely blocked, and say what's missing.</p></div>
+    <div class="card"><h3><span class="num">4</span> Old rules become a brake</h3><p>Years of "never do X" and "always ask for approval": it follows everything and becomes timid. <b>Change:</b> give each rule a reason and scope, and spell out what does <b>not</b> require approval.</p></div>
+    <div class="card"><h3><span class="num">5</span> "Always use subagents" multiplies the cost</h3><p>It spreads the work across several agents. <b>Change:</b> "when the task is independent and can run in parallel."</p></div>
+  </div>
+  <h3 style="margin:26px 0 12px">For people who chat with it</h3>
+  <div class="grid g2">
+    <div class="card"><h3><span class="num">1</span> State the action, not "continue"</h3><p>"Yes, run the migration on the test database" works better than "go ahead."</p></div>
+    <div class="card"><h3><span class="num">2</span> "This code is yours" comes at a cost</h3><p>It combines repeated code and changes things you didn't ask for, using ~50% more tokens. Use it when you want to restructure, and review the diff.</p></div>
+    <div class="card"><h3><span class="num">3</span> It works quietly</h3><p>To follow along, ask: "before you start, tell me in one line what you're going to do."</p></div>
+    <div class="card"><h3><span class="num">4</span> Ask for the summary format</h3><p>"Write for someone who didn't follow along, with the main point first."</p></div>
+  </div>
+  <div class="card" style="margin-top:18px"><h3>And Opus 5.5? Do these rule changes make it worse?</h3><p>No. The changes above follow Anthropic's best practices for Claude models in general: rules with reasons, clearly stated actions, and requests to finish the work also help Opus. It guesses intent better, so the improvement is smaller with Opus. Effort is configured per model in <code>settings.json</code> (<code>modelSettings</code>), so raising Fable 5.2's effort doesn't affect Opus. The only effect: the "finish the job" text may make Opus work and spend a little more on long tasks. Safety rules (API, credit, deletion, publishing) stay the same for both.</p></div>
 </div></section>
 
 <section id="pre"><div class="wrap">
@@ -278,7 +301,7 @@
   <div class="phase"><div class="tag">Plugin</div><div class="d"><strong>Do not edit plugin files</strong><span>An update will undo the change. Write in the global CLAUDE.md that the rule does not apply, or disable the plugin.</span></div></div>
   <div class="phase"><div class="tag">Tip</div><div class="d"><strong>Skills library: keep, don’t delete</strong><span>A skill you rarely use goes in a folder outside <code>~/.claude/skills</code>, with an <code>INDICE.md</code> (name, purpose, search terms). A line in the global CLAUDE.md tells Claude to look there when you ask for a skill that isn’t loaded. Check first whether another skill, script, or timer calls it. On the author’s machine: 148 → 107 loaded skills and 13.7k → 9.6k description tokens per session. Step-by-step instructions: <a href="https://github.com/inematds/audite-seu-claude/blob/main/blocos/biblioteca-skills.md" target="_blank" rel="noopener">blocos/biblioteca-skills.md</a>.</span></div></div>
   <div class="phase"><div class="tag">Cost</div><div class="d"><strong>The blocks use tokens</strong><span>Finish the task: +~30% output. Progress updates: +~20%. Paste a block only if you see the symptom.</span></div></div>
-  <div class="phase"><div class="tag">v1.0</div><div class="d"><strong>Today</strong><span>19 rules in the Fable 5.2 layer, 8 in the volume layer, HTML report, correcoes.md, 4 blocks, skill, 18 tests.</span></div></div>
+  <div class="phase"><div class="tag">v1.0</div><div class="d"><strong>Today</strong><span>19 rules in the Fable 5.2 layer, 8 in the volume layer, HTML report, correcoes.md, 4 blocks, skill, 19 tests.</span></div></div>
   <div class="phase"><div class="tag">Next</div><div class="d"><strong>Measure symptoms in logs</strong><span>Count how often the model stopped midway, stayed silent, or opened subagents in recorded sessions, before and after the fixes.</span></div></div>
 </div></section>
 

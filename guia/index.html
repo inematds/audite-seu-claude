@@ -114,6 +114,7 @@
     <a class="sec" href="#video">Vídeo</a>
     <a class="sec" href="#oque">O que é</a>
     <a class="sec" href="#pontos">Os 10 pontos</a>
+    <a class="sec" href="#prompts">Prompts</a>
     <a class="sec" href="#guia">Guia de uso</a>
     <a class="sec" href="#exemplos">Exemplos</a>
     <span class="lang"><a class="on" href="./">PT</a><a href="en/">EN</a><a href="es/">ES</a></span>
@@ -193,6 +194,28 @@
     <div class="card"><h3><span class="num">9</span> Relatório final</h3><p>Peça que escreva para quem não viu o trabalho: o principal primeiro, sem termo inventado. <b>Confere:</b> se você tem esse texto (<code>blocos/relatorio-claro.md</code>).</p></div>
     <div class="card"><h3><span class="num">10</span> Recusas</h3><p>Pedir o raciocínio escrito na resposta pode cair no filtro <code>reasoning_extraction</code> e a skill para. <b>Confere:</b> "mostre seu raciocínio passo a passo", "chain of thought" — severidade alta.</p></div>
   </div>
+</div></section>
+
+<section id="prompts"><div class="wrap">
+  <span class="chip">O que muda nos prompts</span>
+  <h2>Ele faz o que está escrito, ao pé da letra</h2>
+  <p class="sub">Tirando skills e volume, estas são as trocas de prompt que mais mudam o resultado, da maior para a menor. Prompt escrito para o modelo que "interpretava" passa a dar resultado diferente.</p>
+  <h3 style="margin:22px 0 12px">Para empresas (sistemas, automações, API)</h3>
+  <div class="grid g2">
+    <div class="card"><h3><span class="num">1</span> "Mostre seu raciocínio" pode virar recusa</h3><p>Prompt antigo com "explique passo a passo como pensou" pode voltar como recusa (<code>refusal</code>) em vez de resposta. É o único ponto que quebra produção. <b>Troca:</b> tire a frase; para ver o raciocínio, use o resumo do pensamento da API.</p></div>
+    <div class="card"><h3><span class="num">2</span> O esforço vale mais que o prompt</h3><p>O padrão é <code>high</code>, que custa mais. "Responda direto, sem pensar muito" não diminui o esforço. <b>Troca:</b> escolha o nível por tarefa (low simples, medium dia a dia, high tarefa longa) e meça. Não copie o ajuste do modelo anterior.</p></div>
+    <div class="card"><h3><span class="num">3</span> Ele para no meio</h3><p>Mais em low e medium. Em automação é tarefa largada sem erro nenhum. <b>Troca:</b> cole o texto de "termine o trabalho": resolver obstáculo comum sozinho, parar só no bloqueio de verdade e dizer o que falta.</p></div>
+    <div class="card"><h3><span class="num">4</span> Regras velhas viram freio</h3><p>Anos de "nunca faça X" e "sempre peça aprovação": ele obedece tudo e fica tímido. <b>Troca:</b> dê motivo e alcance a cada regra e escreva o que <b>não</b> precisa de aprovação.</p></div>
+    <div class="card"><h3><span class="num">5</span> "Use subagentes sempre" multiplica o custo</h3><p>Ele espalha o trabalho em vários agentes. <b>Troca:</b> "quando a tarefa for independente e puder rodar em paralelo".</p></div>
+  </div>
+  <h3 style="margin:26px 0 12px">Para quem conversa com ele</h3>
+  <div class="grid g2">
+    <div class="card"><h3><span class="num">1</span> Diga a ação, não "continue"</h3><p>"Sim, rode a migração no banco de teste" funciona melhor que "pode seguir".</p></div>
+    <div class="card"><h3><span class="num">2</span> "Esse código é seu" tem custo</h3><p>Ele junta código repetido e mexe no que você não pediu, com ~50% a mais de tokens. Use quando quiser reestruturar e revise o diff.</p></div>
+    <div class="card"><h3><span class="num">3</span> Ele trabalha calado</h3><p>Para acompanhar, peça: "antes de começar, diga em uma linha o que vai fazer".</p></div>
+    <div class="card"><h3><span class="num">4</span> Peça o formato do resumo</h3><p>"Escreva para quem não acompanhou, o principal primeiro."</p></div>
+  </div>
+  <div class="card" style="margin-top:18px"><h3>E o Opus 5.5? Mudar as regras piora ele?</h3><p>Não. As trocas acima seguem as boas práticas da Anthropic para os modelos Claude em geral: regra com motivo, ação dita com clareza e pedido de terminar o trabalho também ajudam o Opus. Ele adivinha melhor a intenção, então nele o ganho é menor. O esforço é ajustado por modelo no <code>settings.json</code> (<code>modelSettings</code>), então subir o Fable 5.2 não mexe no Opus. Único efeito: o texto de "termine o trabalho" pode fazer o Opus trabalhar e gastar um pouco mais em tarefa longa. Regra de segurança (API, crédito, apagar, publicar) fica como está nos dois.</p></div>
 </div></section>
 
 <section id="pre"><div class="wrap">
@@ -278,7 +301,7 @@
   <div class="phase"><div class="tag">Plugin</div><div class="d"><strong>Não edite arquivo de plugin</strong><span>A atualização desfaz. Escreva no CLAUDE.md global que aquela regra não vale, ou desligue o plugin.</span></div></div>
   <div class="phase"><div class="tag">Dica</div><div class="d"><strong>Biblioteca de skills: guarde, não apague</strong><span>Skill que você usa pouco vai para uma pasta fora de <code>~/.claude/skills</code>, com um <code>INDICE.md</code> (nome, para quê, palavras de busca). Uma linha no CLAUDE.md global manda o Claude procurar lá quando você pedir uma skill que não está carregada. Confira antes se outra skill, script ou timer chama a skill. Na máquina do autor: 148 → 107 skills carregadas e 13,7 mil → 9,6 mil tokens de descrição por sessão. Passo a passo: <a href="https://github.com/inematds/audite-seu-claude/blob/main/blocos/biblioteca-skills.md" target="_blank" rel="noopener">blocos/biblioteca-skills.md</a>.</span></div></div>
   <div class="phase"><div class="tag">Custo</div><div class="d"><strong>Os blocos custam tokens</strong><span>Terminar a tarefa: +~30% de saída. Avisar progresso: +~20%. Cole só se você vê o sintoma.</span></div></div>
-  <div class="phase"><div class="tag">v1.0</div><div class="d"><strong>Hoje</strong><span>19 regras na camada Fable 5.2, 8 na camada de volume, relatório HTML, correcoes.md, 4 blocos, skill, 18 testes.</span></div></div>
+  <div class="phase"><div class="tag">v1.0</div><div class="d"><strong>Hoje</strong><span>19 regras na camada Fable 5.2, 8 na camada de volume, relatório HTML, correcoes.md, 4 blocos, skill, 19 testes.</span></div></div>
   <div class="phase"><div class="tag">Depois</div><div class="d"><strong>Medir os sintomas nos logs</strong><span>Contar nas sessões gravadas quantas vezes o modelo parou no meio, ficou calado ou abriu subagentes, antes e depois das correções.</span></div></div>
 </div></section>
 

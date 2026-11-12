@@ -30,7 +30,7 @@ import argparse, html, json, os, re, sys, time
 from datetime import date, datetime
 from pathlib import Path
 
-VERSAO = '1.0.2'
+VERSAO = '1.0.3'
 
 DICA_BIBLIOTECA = ('Dica: crie uma biblioteca de skills, uma pasta fora de ~/.claude/skills (ex.: ~/projetos/skills-reserva/.claude/skills) '
                    'com um INDICE.md (nome + para quê + palavras de busca). Ela não carrega em toda sessão. '
@@ -122,6 +122,7 @@ for r in REGRAS:
 RX_NUNCA = re.compile(r'\b(nunca|jamais|proibido|never)\b', re.I)
 RX_MOTIVO = re.compile(r'porque|pois\b|motivo|\bwhy\b|because|para\s+n[ãa]o|para\s+evitar|sen[ãa]o\b|caso\s+contr[áa]rio|risco|'
                        r'\b\d{1,2}/\d{1,2}(/\d{2,4})?\b|\b20\d\d-\d\d|\(.{6,}\)|exceto|exce[çc][ãa]o|unless|except', re.I)
+RX_MOTIVO_ARQ = re.compile(r'^\s*\*\*\s*(why|por\s*qu[êe]|motivo)\s*:?\s*\*\*', re.I)
 RX_PROTEGIDA = re.compile(r'\bAPI\b|cr[ée]dito|credencia|chave|senha|secret|token\s+de|irrevers|exclu|apag|delet|rm\s+-rf|--force|'
                           r'pagamento|pago\b|dinheiro|seguran|security|publica|push|produ[çc][ãa]o|e-?mail', re.I)
 
@@ -321,6 +322,10 @@ class Auditoria:
             self.nunca_sem_motivo(p, linhas, terceiro)
 
     def nunca_sem_motivo(self, p, linhas, terceiro):
+        # Nota curta de memória (um fato por arquivo) com linha "**Why:**"/"**Por quê:**":
+        # o motivo vale para o arquivo inteiro, não só para a linha vizinha.
+        if len(linhas) <= 60 and any(RX_MOTIVO_ARQ.match(l) for l in linhas):
+            return
         dentro_codigo = False
         for i, ln in enumerate(linhas):
             if ln.strip().startswith('```'):

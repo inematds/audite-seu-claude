@@ -57,7 +57,7 @@ python3 ~/audite-seu-claude/varrer.py . --home --html relatorio.html --saida-jso
 | `varrer.py` | The auditor. Options: `--home`, `--html`, `--saida-json`, `--json`, `--uso DIAS`, `--anonimo`, `--fundo N`, `--estrito` (CI), `--correcoes IDs --de relatorio.json`. |
 | `blocos/` | Ready-to-paste text for `CLAUDE.md`: `terminar-tarefa.md`, `avisar-progresso.md`, `relatorio-claro.md` (translations of the official texts, with the cost measured by Anthropic), and `aprovacoes.md` (template with a list of named actions). Originals in `blocos/en/`. More in `biblioteca-skills.md`: how to keep the skills you don’t use every day. |
 | `skill/audite-seu-claude/` | Skill for Claude Code: audits, waits for your approval, and applies `correcoes.md`. Copy it to `~/.claude/skills/`. |
-| `tests/` | 18 tests with no network access: `python3 -m unittest discover tests`. |
+| `tests/` | 19 tests with no network access: `python3 -m unittest discover tests`. |
 
 ## The process, start to finish
 

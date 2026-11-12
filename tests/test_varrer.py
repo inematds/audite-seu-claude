@@ -81,6 +81,15 @@ class TestLimpo(unittest.TestCase):
         f = [a for a in au.achados if a['camada'] == 'fable52']
         self.assertEqual(f, [], [(a['regra'], a['trecho']) for a in f])
 
+    def test_memoria_com_why_nao_conta(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, 'CLAUDE.md').write_text('---\nname: x\n---\nRobô nunca cartoon.\n\n**Why:** o Nei reprovou em 10/10.\n')
+            au = varrer.rodar([d])
+            self.assertFalse([x for x in au.achados if x['regra'] == 'nunca-sem-motivo'])
+            Path(d, 'CLAUDE.md').write_text('Robô nunca cartoon.\n\nOutra linha.\n')
+            au = varrer.rodar([d])
+            self.assertTrue([x for x in au.achados if x['regra'] == 'nunca-sem-motivo'])
+
     def test_citacao_entre_aspas_nao_conta(self):
         self.assertTrue(varrer.citado('ex.: "mostre seu raciocínio', 9))
 
